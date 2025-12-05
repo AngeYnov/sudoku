@@ -10,6 +10,7 @@ const grilleInitiale = [
     [0, 0, 0, 0, 8, 0, 0, 7, 9]
 ]
 
+//Afficher grille
 function afficherGrille(grille){
     const conteneur = document.getElementById("sudoku-grid")
     conteneur.innerHTML = ""
@@ -38,8 +39,48 @@ function afficherGrille(grille){
         }
     }
 }
-
 afficherGrille(grilleInitiale);
+
+//Récupérer la grille
+function recupererGrille() {
+    let tableauduJeu = [];
+    const inputs = document.querySelectorAll(".case");
+    for (let i = 0; i < 9; i++) {
+        let ligne = [];        
+        for (let j = 0; j < 9; j++) {
+            const index = (i * 9) + j;
+            const valeurInput = inputs[index].value;
+            if (valeurInput === "") {
+                ligne.push(0);
+            } else {
+                ligne.push(parseInt(valeurInput)); 
+            }
+        }
+        tableauduJeu.push(ligne);
+    } 
+    return tableauduJeu;
+}
+
+//Bouton vérifier
+const boutonVerifier = document.getElementById("btn-verifier");
+const messageZone = document.getElementById("message-feedback");
+
+boutonVerifier.addEventListener("click", function() {
+    const grilleJoueur = recupererGrille();
+    let casesRemplies = 0;
+    for (let i = 0; i < 9; i++) {
+        for (let j = 0; j < 9; j++) {
+            if (grilleJoueur[i][j] !== 0) {
+                casesRemplies++;
+            }
+        }
+    }
+    messageZone.innerText = "Lecture réussie ! Tu as rempli " + casesRemplies + " cases sur 81.";
+    messageZone.classList.add("message-visible");
+    setTimeout(function() {
+        messageZone.classList.remove("message-visible");
+    }, 4000);
+})
 
 //Sakura
 function creerSakura() {
