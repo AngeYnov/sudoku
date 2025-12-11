@@ -10,6 +10,52 @@ const grilleInitiale = [
     [0, 0, 0, 0, 8, 0, 0, 7, 9]
 ]
 
+//Nouvelle grille
+function nouvelleGrille(grille, row, col, num) {
+    for (let x = 0; x < 9; x++) if (grille[row][x] === num) return false;
+    for (let x = 0; x < 9; x++) if (grille[x][col] === num) return false;
+    const startRow = row - row % 3, startCol = col - col % 3;
+    for (let i = 0; i < 3; i++)
+        for (let j = 0; j < 3; j++)
+            if (grille[i + startRow][j + startCol] === num) return false;
+    return true;
+}
+function genererNouvelleGrille() {
+    let grille = Array.from({ length: 9 }, () => Array(9).fill(0));
+    function remplir(g) {
+        for (let i = 0; i < 9; i++) {
+            for (let j = 0; j < 9; j++) {
+                if (g[i][j] === 0) {
+                    let nums = [1, 2, 3, 4, 5, 6, 7, 8, 9].sort(() => Math.random() - 0.5);
+                    for (let num of nums) {
+                        if (nouvelleGrille(g, i, j, num)) {
+                            g[i][j] = num;
+                            if (remplir(g)) return true;
+                            g[i][j] = 0;
+                        }
+                    }
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+    remplir(grille);
+    
+    const minTrous = 30; 
+    const maxTrous = 50; 
+    let trous = Math.floor(Math.random() * (maxTrous - minTrous + 1)) + minTrous;
+    while (trous > 0) {
+        let row = Math.floor(Math.random() * 9);
+        let col = Math.floor(Math.random() * 9);
+        if (grille[row][col] !== 0) {
+            grille[row][col] = 0; 
+            trous--; 
+        }
+    }
+    return grille;
+}
+
 //Afficher grille
 function afficherGrille(grille){
     const conteneur = document.getElementById("sudoku-grid")
@@ -40,6 +86,16 @@ function afficherGrille(grille){
     }
 }
 afficherGrille(grilleInitiale);
+
+//Bouton nouvelle partie
+document.getElementById("btn-reset").addEventListener("click", function() {
+    const nouvelleGrille = genererNouvelleGrille();
+    afficherGrille(nouvelleGrille);
+    const messageZone = document.getElementById("message-feedback");
+    messageZone.innerText = "";        
+    messageZone.className = "";            
+    messageZone.style.opacity = "0";        
+});
 
 //Récupérer la grille
 function recupererGrille() {
@@ -153,11 +209,6 @@ boutonVerifier.addEventListener("click", function() {
     messageZone.classList.add("message-visible");
     setTimeout(() => messageZone.classList.remove("message-visible"), 4000);
 })
-
-//Bouton Nouvelle Partie (reload la page)
-document.getElementById("btn-reset").addEventListener("click", function() {
-    location.reload();
-});
 
 //Sakura
 function creerSakura() {
