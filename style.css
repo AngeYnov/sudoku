@@ -69,10 +69,11 @@ button:hover {
     grid-template-columns: repeat(9, 50px);
     grid-template-rows: repeat(9, 50px);
     gap: 0px;
-    border: 2px solid #000000;
+    border: 3px solid #000000;
     border-radius: 5px;
     margin-top: 20px;
     margin-bottom: 20px;
+    width: fit-content;
 }
 
 .pre-rempli {
