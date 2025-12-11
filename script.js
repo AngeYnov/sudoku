@@ -61,26 +61,103 @@ function recupererGrille() {
     return tableauduJeu;
 }
 
+//Vérifier ligne
+function verifierLigne(grille, indexLigne) {
+    const ligne = grille[indexLigne];
+    if (ligne.includes(0)) {
+        return false;
+    }
+    const valeursUniques = new Set(ligne);
+    if (valeursUniques.size !== 9) {
+        return false;
+    }
+    return true;
+}
+
+//Vérifier colonne
+function verifierColonne(grille, indexCol) {
+    let valeursDeLaColonne = [];
+    for (let i = 0; i < 9; i++) {
+        valeursDeLaColonne.push(grille[i][indexCol]);
+    }
+    if (valeursDeLaColonne.includes(0)) {
+        return false;
+    }
+    const unique = new Set(valeursDeLaColonne);
+    if (unique.size !== 9) {
+        return false;
+    }
+    return true;
+}
+
+//Vérifier région
+function verifierRegion(grille, lStart, cStart) {
+    let valeursRegion = [];
+    for (let i = 0; i < 3; i++) {
+        for (let j = 0; j < 3; j++) {
+            const valeur = grille[lStart + i][cStart + j];
+            valeursRegion.push(valeur);
+        }
+    }
+    if (valeursRegion.includes(0)) {
+        return false;
+    }
+    const unique = new Set(valeursRegion);
+    if (unique.size !== 9) {
+        return false;
+    }
+    return true;
+}
+
+//Vérifier grille complète
+function verifierGrilleComplete(grille) {
+    for (let i = 0; i < 9; i++) {
+        if (verifierLigne(grille, i) === false) {
+            console.log("Erreur sur la ligne " + i); // Pour t'aider à débuguer
+            return false;
+        }
+    }
+    for (let j = 0; j < 9; j++) {
+        if (verifierColonne(grille, j) === false) {
+            console.log("Erreur sur la colonne " + j);
+            return false;
+        }
+    }
+    for (let i = 0; i < 9; i += 3) {
+        for (let j = 0; j < 9; j += 3) {
+            if (verifierRegion(grille, i, j) === false) {
+                console.log("Erreur sur la région qui commence en " + i + "," + j);
+                return false;
+            }
+        }
+    }
+    return true;
+}
+
 //Bouton vérifier
 const boutonVerifier = document.getElementById("btn-verifier");
 const messageZone = document.getElementById("message-feedback");
 
 boutonVerifier.addEventListener("click", function() {
     const grilleJoueur = recupererGrille();
-    let casesRemplies = 0;
-    for (let i = 0; i < 9; i++) {
-        for (let j = 0; j < 9; j++) {
-            if (grilleJoueur[i][j] !== 0) {
-                casesRemplies++;
-            }
-        }
+    const estValide = verifierGrilleComplete(grilleJoueur);
+    if(estValide) {
+        messageZone.innerText = "BRAVO ! Tu as gagné !";
+        messageZone.classList.add("succes");
+        messageZone.classList.remove("erreur");
+    } else {
+        messageZone.innerText = "Il y a des erreurs";
+        messageZone.classList.add("erreur");
+        messageZone.classList.remove("succes");
     }
-    messageZone.innerText = "Lecture réussie ! Tu as rempli " + casesRemplies + " cases sur 81.";
     messageZone.classList.add("message-visible");
-    setTimeout(function() {
-        messageZone.classList.remove("message-visible");
-    }, 4000);
+    setTimeout(() => messageZone.classList.remove("message-visible"), 4000);
 })
+
+//Bouton Nouvelle Partie (reload la page)
+document.getElementById("btn-reset").addEventListener("click", function() {
+    location.reload();
+});
 
 //Sakura
 function creerSakura() {
