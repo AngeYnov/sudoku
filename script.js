@@ -182,22 +182,24 @@ function verifierRegion(grille, lStart, cStart) {
 
 //Vérifier grille complète
 function verifierGrilleComplete(grille) {
+    const inputs = document.querySelectorAll(".case");
+    inputs.forEach(input => input.classList.remove("invalide"));
     for (let i = 0; i < 9; i++) {
         if (verifierLigne(grille, i) === false) {
-            console.log("Erreur sur la ligne " + i);
-            return false;
+            surlignerErreur("ligne", i); 
+            return false; 
         }
     }
     for (let j = 0; j < 9; j++) {
         if (verifierColonne(grille, j) === false) {
-            console.log("Erreur sur la colonne " + j);
+            surlignerErreur("colonne", j);
             return false;
         }
     }
     for (let i = 0; i < 9; i += 3) {
         for (let j = 0; j < 9; j += 3) {
             if (verifierRegion(grille, i, j) === false) {
-                console.log("Erreur sur la région qui commence en " + i + "," + j);
+                surlignerErreur("region", i, j);
                 return false;
             }
         }
@@ -224,6 +226,29 @@ function resoudreGrille(grille) {
         }
     }
     return true;
+}
+
+// Fonction coloration zones fausse en rouge
+function surlignerErreur(type, indexA, indexB = 0) {
+    const inputs = document.querySelectorAll(".case");
+    if (type === "ligne") {
+        for (let i = 0; i < 9; i++) {
+            inputs[(indexA * 9) + i].classList.add("invalide");
+        }
+    }
+    else if (type === "colonne") {
+        for (let i = 0; i < 9; i++) {
+            inputs[indexA + (i * 9)].classList.add("invalide");
+        }
+    }
+    else if (type === "region") {
+        for (let i = 0; i < 3; i++) {
+            for (let j = 0; j < 3; j++) {
+                const index = ((indexA + i) * 9) + (indexB + j);
+                inputs[index].classList.add("invalide");
+            }
+        }
+    }
 }
 
 //Bouton vérifier

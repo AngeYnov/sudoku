@@ -138,3 +138,9 @@ button:hover {
 .message-visible {
     opacity: 1 !important;
 }
+
+.invalide {
+    background-color: #ffcdd2 !important;
+    color: #c62828 !important;  
+    transition: background-color 0.3s; 
+}
