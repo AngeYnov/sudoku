@@ -1,4 +1,4 @@
-const grilleInitiale = [
+let grilleInitiale = [
     [5, 3, 0, 0, 7, 0, 0, 0, 0],
     [6, 0, 0, 1, 9, 5, 0, 0, 0],
     [0, 9, 8, 0, 0, 0, 0, 6, 0],
@@ -41,7 +41,7 @@ function genererNouvelleGrille() {
         return true;
     }
     remplir(grille);
-    
+
     const minTrous = 30; 
     const maxTrous = 50; 
     let trous = Math.floor(Math.random() * (maxTrous - minTrous + 1)) + minTrous;
@@ -89,12 +89,12 @@ afficherGrille(grilleInitiale);
 
 //Bouton nouvelle partie
 document.getElementById("btn-reset").addEventListener("click", function() {
-    const nouvelleGrille = genererNouvelleGrille();
-    afficherGrille(nouvelleGrille);
+    grilleInitiale = genererNouvelleGrille(); 
+    afficherGrille(grilleInitiale);
     const messageZone = document.getElementById("message-feedback");
     messageZone.innerText = "";        
     messageZone.className = "";            
-    messageZone.style.opacity = "0";        
+    messageZone.style.opacity = "0";      
 });
 
 //Récupérer la grille
@@ -115,6 +115,21 @@ function recupererGrille() {
         tableauduJeu.push(ligne);
     } 
     return tableauduJeu;
+}
+
+//Placement valide
+function placementValide(grille, row, col, num) {
+    for (let x = 0; x < 9; x++) {
+        if (grille[row][x] === num || grille[x][col] === num) return false;
+    }
+    const startRow = row - row % 3;
+    const startCol = col - col % 3;
+    for (let i = 0; i < 3; i++) {
+        for (let j = 0; j < 3; j++) {
+            if (grille[startRow + i][startCol + j] === num) return false;
+        }
+    }
+    return true;
 }
 
 //Vérifier ligne
@@ -169,7 +184,7 @@ function verifierRegion(grille, lStart, cStart) {
 function verifierGrilleComplete(grille) {
     for (let i = 0; i < 9; i++) {
         if (verifierLigne(grille, i) === false) {
-            console.log("Erreur sur la ligne " + i); // Pour t'aider à débuguer
+            console.log("Erreur sur la ligne " + i);
             return false;
         }
     }
@@ -183,6 +198,27 @@ function verifierGrilleComplete(grille) {
         for (let j = 0; j < 9; j += 3) {
             if (verifierRegion(grille, i, j) === false) {
                 console.log("Erreur sur la région qui commence en " + i + "," + j);
+                return false;
+            }
+        }
+    }
+    return true;
+}
+
+//Résoudre grille
+function resoudreGrille(grille) {
+    for (let i = 0; i < 9; i++) {
+        for (let j = 0; j < 9; j++) {
+            if (grille[i][j] === 0) {
+                for (let num = 1; num <= 9; num++) {
+                    if (placementValide(grille, i, j, num)) {
+                        grille[i][j] = num;
+                        if (resoudreGrille(grille)) {
+                            return true;
+                        }
+                        grille[i][j] = 0;
+                    }
+                }
                 return false;
             }
         }
@@ -209,6 +245,19 @@ boutonVerifier.addEventListener("click", function() {
     messageZone.classList.add("message-visible");
     setTimeout(() => messageZone.classList.remove("message-visible"), 4000);
 })
+
+//Bouton Résoudre
+document.getElementById("btn-solve").addEventListener("click", function() {
+    if (confirm("Veux-tu voir la solution ?")) {
+        let grilleSolution = JSON.parse(JSON.stringify(grilleInitiale));
+        resoudreGrille(grilleSolution);
+        afficherGrille(grilleSolution);
+        const messageZone = document.getElementById("message-feedback");
+        messageZone.innerText = "Voici la solution !";
+        messageZone.className = "succes";
+        messageZone.classList.add("message-visible");
+    }
+});
 
 //Sakura
 function creerSakura() {
