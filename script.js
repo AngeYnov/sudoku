@@ -1,3 +1,5 @@
+let modeNotes = false;
+
 let grilleInitiale = [
     [5, 3, 0, 0, 7, 0, 0, 0, 0],
     [6, 0, 0, 1, 9, 5, 0, 0, 0],
@@ -57,31 +59,50 @@ function genererNouvelleGrille() {
 }
 
 //Afficher grille
-function afficherGrille(grille){
-    const conteneur = document.getElementById("sudoku-grid")
-    conteneur.innerHTML = ""
-    for (let i = 0; i <9; i++) {
+function afficherGrille(grille) {
+    const conteneur = document.getElementById("sudoku-grid");
+    conteneur.innerHTML = "";  
+    for (let i = 0; i < 9; i++) {
         for (let j = 0; j < 9; j++) {
             const valeur = grille[i][j];
-            const caseInput = document.createElement("input")
-            caseInput.addEventListener("input", function() {
-                if (this.value.length > 1) {
-                    this.value = this.value.slice(-1)
+            const cellule = document.createElement("div");
+            cellule.className = "cellule";
+            const notesDiv = document.createElement("div");
+            notesDiv.className = "notes";
+            cellule.appendChild(notesDiv);
+            const caseInput = document.createElement("input");
+            caseInput.className = "case";
+            caseInput.addEventListener("keydown", function(e) {
+                const key = e.key;
+                if (key >= '1' && key <= '9') {
+                    e.preventDefault();
+                    if (modeNotes) {
+                        let notesActuelles = notesDiv.innerText.split(" ");
+                        notesActuelles = notesActuelles.filter(n => n !== "");
+                        if (notesActuelles.includes(key)) {
+                            notesActuelles = notesActuelles.filter(n => n !== key);
+                        } else {
+                            notesActuelles.push(key);
+                        }
+                        notesDiv.innerText = notesActuelles.sort().join(" ");
+                    } else {
+                        this.value = key;
+                    }
+                } 
+                else if (key === "Backspace" || key === "Delete") {
+                    if (!modeNotes) {
+                        this.value = "";
+                    }
                 }
-                if (this.value === "0") {
-                    this.value = "";
-                }
-                this.value = this.value.replace(/[^1-9]/g, "");
-            })
-            caseInput.className = "case"
-            if (valeur === 0) {
-                caseInput.value = ""
-            } else { 
+            });
+            if (valeur !== 0) {
                 caseInput.value = valeur;
                 caseInput.disabled = true;
-                caseInput.classList.add("pre-rempli")
+                caseInput.classList.add("pre-rempli");
+                cellule.classList.add("pre-rempli-box");
             }
-            conteneur.appendChild(caseInput);
+            cellule.appendChild(caseInput);
+            conteneur.appendChild(cellule);
         }
     }
 }
@@ -281,6 +302,19 @@ document.getElementById("btn-solve").addEventListener("click", function() {
         messageZone.innerText = "Voici la solution !";
         messageZone.className = "succes";
         messageZone.classList.add("message-visible");
+    }
+});
+
+//Bouton Mode
+const btnMode = document.getElementById("btn-mode");
+btnMode.addEventListener("click", function() {
+    modeNotes = !modeNotes;
+    if (modeNotes) {
+        btnMode.innerText = "Mode: 📝 Notes";
+        btnMode.style.backgroundColor = "#e1f5fe";
+    } else {
+        btnMode.innerText = "Mode: 🖊️ Réponse";
+        btnMode.style.backgroundColor = "";
     }
 });
 

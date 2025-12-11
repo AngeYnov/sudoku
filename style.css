@@ -58,7 +58,7 @@ button:hover {
     display: flex;
     justify-content: center;
     gap: 20px;
-    margin-top: 10px;
+    margin-top: 5px;
 }
 
 #sudoku-grid {
@@ -85,10 +85,15 @@ button:hover {
 .case {
     width: 100%;
     height: 100%;
-    box-sizing: border-box;
+    position: absolute; 
+    top: 0;
+    left: 0;
+    background: transparent;
+    border: none; 
     text-align: center;
     font-size: 25px;
-    border: 1px solid #000000;
+    z-index: 10;
+    color: black;
 }
 
 .case:nth-child(3n) {
@@ -144,4 +149,54 @@ button:hover {
     background-color: #ffcdd2 !important;
     color: #c62828 !important;  
     transition: background-color 0.3s; 
+}
+
+.cellule {
+    width: 50px;
+    height: 50px;
+    position: relative;
+    border: 1px solid #000000;
+    box-sizing: border-box;
+    background-color: white;
+}
+
+.cellule:nth-child(3n) {
+    border-right: 3px solid #000000;
+}
+
+.cellule:nth-child(9n) {
+    border-right: 1px solid #000000;
+}
+
+.cellule:nth-child(n+19):nth-child(-n+27)
+
+.cellule:nth-child(n+46):nth-child(-n+54) {
+    border-bottom: 3px solid #000000;
+}
+
+.cellule.pre-rempli-box {
+    background-color: #f1f1f1;
+}
+
+.notes {
+    position: absolute;
+    bottom: 2px;
+    left: 2px;
+    right: 2px;
+    height: 15px;
+    font-size: 10px;
+    line-height: 10px;
+    color: #666;
+    text-align: center;
+    pointer-events: none;
+    z-index: 5;
+    font-family: sans-serif;
+    overflow: hidden;
+}
+
+.zone-mode {
+    display: flex;
+    justify-content: center;
+    margin-top: 15px;
+    margin-bottom: 5px;
 }
