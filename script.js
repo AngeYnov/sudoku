@@ -326,6 +326,14 @@ btnMode.addEventListener("click", function() {
     }
 });
 
+//Tab pour Mode
+document.addEventListener("keydown", function(e) {
+    if (e.key === "Tab") {
+        e.preventDefault(); 
+        btnMode.click(); 
+    }
+});
+
 //Sakura
 function creerSakura() {
     const sakura = document.createElement("div");
