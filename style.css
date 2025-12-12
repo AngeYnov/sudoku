@@ -88,12 +88,12 @@ button:hover {
     position: absolute; 
     top: 0;
     left: 0;
-    background: transparent;
     border: none; 
     text-align: center;
     font-size: 25px;
     z-index: 10;
     color: black;
+    background-color: transparent;
 }
 
 .case:nth-child(3n) {
@@ -168,7 +168,7 @@ button:hover {
     border-right: 1px solid #000000;
 }
 
-.cellule:nth-child(n+19):nth-child(-n+27)
+.cellule:nth-child(n+19):nth-child(-n+27),
 
 .cellule:nth-child(n+46):nth-child(-n+54) {
     border-bottom: 3px solid #000000;
@@ -176,6 +176,11 @@ button:hover {
 
 .cellule.pre-rempli-box {
     background-color: #f1f1f1;
+}
+
+.cellule.invalide {
+    background-color: #ffcdd2 !important;
+    transition: background-color 0.3s;
 }
 
 .notes {

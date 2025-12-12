@@ -75,29 +75,35 @@ function afficherGrille(grille) {
             caseInput.addEventListener("keydown", function(e) {
                 const key = e.key;
                 if (key >= '1' && key <= '9') {
-                    e.preventDefault();
+                    e.preventDefault(); 
                     if (modeNotes) {
                         let notesActuelles = notesDiv.innerText.split(" ");
                         notesActuelles = notesActuelles.filter(n => n !== "");
+                        
                         if (notesActuelles.includes(key)) {
                             notesActuelles = notesActuelles.filter(n => n !== key);
                         } else {
                             notesActuelles.push(key);
                         }
                         notesDiv.innerText = notesActuelles.sort().join(" ");
+                        
                     } else {
-                        this.value = key;
+                        this.value = key; 
                     }
                 } 
                 else if (key === "Backspace" || key === "Delete") {
+                    e.preventDefault(); 
                     if (!modeNotes) {
-                        this.value = "";
+                        this.value = ""; 
                     }
+                }
+                else if (key.length === 1) {
+                    e.preventDefault();
                 }
             });
             if (valeur !== 0) {
-                caseInput.value = valeur;
-                caseInput.disabled = true;
+                caseInput.value = valeur;  
+                caseInput.disabled = true;    
                 caseInput.classList.add("pre-rempli");
                 cellule.classList.add("pre-rempli-box");
             }
@@ -204,7 +210,7 @@ function verifierRegion(grille, lStart, cStart) {
 //Vérifier grille complète
 function verifierGrilleComplete(grille) {
     const inputs = document.querySelectorAll(".case");
-    inputs.forEach(input => input.classList.remove("invalide"));
+    inputs.forEach(input => input.parentElement.classList.remove("invalide"));
     for (let i = 0; i < 9; i++) {
         if (verifierLigne(grille, i) === false) {
             surlignerErreur("ligne", i); 
@@ -254,19 +260,21 @@ function surlignerErreur(type, indexA, indexB = 0) {
     const inputs = document.querySelectorAll(".case");
     if (type === "ligne") {
         for (let i = 0; i < 9; i++) {
-            inputs[(indexA * 9) + i].classList.add("invalide");
+            const index = (indexA * 9) + i; 
+            inputs[index].parentElement.classList.add("invalide");
         }
     }
     else if (type === "colonne") {
         for (let i = 0; i < 9; i++) {
-            inputs[indexA + (i * 9)].classList.add("invalide");
+            const index = indexA + (i * 9);
+            inputs[index].parentElement.classList.add("invalide");
         }
     }
     else if (type === "region") {
         for (let i = 0; i < 3; i++) {
             for (let j = 0; j < 3; j++) {
                 const index = ((indexA + i) * 9) + (indexB + j);
-                inputs[index].classList.add("invalide");
+                inputs[index].parentElement.classList.add("invalide");
             }
         }
     }
