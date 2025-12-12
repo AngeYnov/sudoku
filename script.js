@@ -118,6 +118,7 @@ afficherGrille(grilleInitiale);
 document.getElementById("btn-reset").addEventListener("click", function() {
     grilleInitiale = genererNouvelleGrille(); 
     afficherGrille(grilleInitiale);
+    demarrerChrono();
     const messageZone = document.getElementById("message-feedback");
     messageZone.innerText = "";        
     messageZone.className = "";            
@@ -291,6 +292,7 @@ boutonVerifier.addEventListener("click", function() {
         messageZone.innerText = "BRAVO ! Tu as gagné !";
         messageZone.classList.add("succes");
         messageZone.classList.remove("erreur");
+        arreterChrono();
     } else {
         messageZone.innerText = "Il y a des erreurs";
         messageZone.classList.add("erreur");
@@ -333,6 +335,36 @@ document.addEventListener("keydown", function(e) {
         btnMode.click(); 
     }
 });
+
+//Chrono
+let tempsSecondes = 0;
+let chronoProcess = null;
+function demarrerChrono() {
+    if (chronoProcess) {
+        clearInterval(chronoProcess);
+    }
+    tempsSecondes = 0;
+    mettreAJourAffichage();
+    chronoProcess = setInterval(function() {
+        tempsSecondes++;
+        mettreAJourAffichage();
+    }, 1000);
+}
+function arreterChrono() {
+    if (chronoProcess) {
+        clearInterval(chronoProcess);
+        chronoProcess = null;
+    }
+}
+function mettreAJourAffichage() {
+    const minutes = Math.floor(tempsSecondes / 60);
+    const secondes = tempsSecondes % 60;
+    const affichageMin = minutes.toString().padStart(2, '0');
+    const affichageSec = secondes.toString().padStart(2, '0');
+    document.getElementById("chrono").innerText = `${affichageMin}:${affichageSec}`;
+}
+
+demarrerChrono();
 
 //Sakura
 function creerSakura() {

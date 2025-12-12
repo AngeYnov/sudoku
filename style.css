@@ -205,3 +205,13 @@ button:hover {
     margin-top: 15px;
     margin-bottom: 5px;
 }
+
+#chrono {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 40px;
+    text-align: center;
+    color: #000000;
+    margin-top: -20px;
+    margin-bottom: -10px;
+    letter-spacing: 2px;
+}
