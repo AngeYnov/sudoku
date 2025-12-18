@@ -1,4 +1,4 @@
-let modeNotes = false; // Variable interrupteur : Soit on note (true), soit on répond (false)
+let modeNotes = false; // Variable interrupteur
 
 // Une grille de base pour commencer
 let grilleInitiale = [
