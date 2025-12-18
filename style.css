@@ -1,33 +1,32 @@
 body {
+    /* On centre tout au milieu de l'écran */
     display: grid;
     justify-content: center;
     background-color: #fce4ec;
-    overflow: hidden;
+    overflow: hidden; /* Empêche les pétales d'agrendir la page */
     position: relative;
     font-family: sans-serif;
 }
 
+/* --- ANIMATION SAKURA --- */
 .sakura {
-    position: absolute;
+    position: absolute; /* Permet de les placer n'importe où sur l'écran */
     top: -10px;
     background: #ffb7b2;
-    border-radius: 100% 0 100% 0;
+    border-radius: 100% 0 100% 0; /* Forme de pétale */
     opacity: 0.6;
-    pointer-events: none; 
-    animation: tomber linear infinite;
-    z-index: -1;
+    pointer-events: none; /* Permet de cliquer "au travers" des pétales */
+    animation: tomber linear infinite; /* L'animation tourne en boucle */
+    z-index: -1; /* On les met "derrière" le texte pour ne pas gêner */
 }
 
+/* Définit comment les pétales tombent (de haut en bas + rotation) */
 @keyframes tomber {
-    0% {
-        transform: translateY(0) rotate(0deg);
-        opacity: 1;
-    }
-    100% {
-        transform: translateY(100vh) rotate(360deg);
-        opacity: 0;
-    }
+    0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+    100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
 }
+
+/* Style du Titre et des Boutons : simple déco */
 
 h1 {
     font-family: 'Bebas Neue', sans-serif;
@@ -61,15 +60,15 @@ button:hover {
     margin-top: 5px;
 }
 
+/* --- LA GRILLE --- */
 #sudoku-grid {
     background-color: white;
-    box-shadow: 0 0 20px rgba(0,0,0,0.1);
     z-index: 1;
-    display: grid;
-    grid-template-columns: repeat(9, 50px);
-    grid-template-rows: repeat(9, 50px);
-    gap: 0px;
-    border: 3px solid #000000;
+    display: grid; /* On utilise une Grille CSS */
+    grid-template-columns: repeat(9, 50px); /* 9 colonnes de 50px */
+    grid-template-rows: repeat(9, 50px);    /* 9 lignes de 50px */
+    gap: 0px; /* Cases collées les unes aux autres */
+    border: 3px solid #000000; /* Gros cadre noir autour */
     border-radius: 5px;
     margin-top: 20px;
     margin-bottom: 20px;
@@ -82,32 +81,31 @@ button:hover {
     color: #333;
 }
 
+/* L'endroit où le joueur écrit */
 .case {
     width: 100%;
     height: 100%;
-    position: absolute; 
+    position: absolute; /* SUPERPOSITION : L'input est posé PAR DESSUS la case */
     top: 0;
     left: 0;
     border: none; 
     text-align: center;
     font-size: 25px;
-    z-index: 10;
+    z-index: 10; /* Niveau le plus haut (au premier plan) */
     color: black;
     background-color: transparent;
 }
 
-.case:nth-child(3n) {
-    border-right: 3px solid #000000;
-}
-.case:nth-child(9n) {
-    border-right: 1px solid #000000;
-}
-.case:nth-child(n+19):nth-child(-n+27) {
-    border-bottom: 3px solid #000000;
-}
-.case:nth-child(n+46):nth-child(-n+54) {
-    border-bottom: 3px solid #000000;
-}
+/* --- DESSIN DES LIGNES NOIRES --- */
+/* Chaque 3ème case a une bordure droite épaisse */
+.case:nth-child(3n) { border-right: 3px solid #000000; }
+.case:nth-child(9n) { border-right: 1px solid #000000; } /* Sauf la dernière de la ligne */
+
+/* Les lignes horizontales épaisses (lignes 19-27 et 46-54) */
+.case:nth-child(n+19):nth-child(-n+27) { border-bottom: 3px solid #000000; }
+.case:nth-child(n+46):nth-child(-n+54) { border-bottom: 3px solid #000000; }
+
+/* ... Zone de message gagné/perdu ... */
 
 #message-feedback {
     text-align: center;
@@ -151,6 +149,8 @@ button:hover {
     transition: background-color 0.3s; 
 }
 
+/* --- LA CELLULE --- */
+/* C'est la boîte qui contient tout (Notes + Input + Bordures) */
 .cellule {
     width: 50px;
     height: 50px;
@@ -160,29 +160,21 @@ button:hover {
     background-color: white;
 }
 
-.cellule:nth-child(3n) {
-    border-right: 3px solid #000000;
-}
-
-.cellule:nth-child(9n) {
-    border-right: 1px solid #000000;
-}
-
+/* On répète les bordures ici pour qu'elles restent visibles même si l'input est vide */
+.cellule:nth-child(3n) { border-right: 3px solid #000000; }
+.cellule:nth-child(9n) { border-right: 1px solid #000000; }
 .cellule:nth-child(n+19):nth-child(-n+27),
+.cellule:nth-child(n+46):nth-child(-n+54) { border-bottom: 3px solid #000000; }
 
-.cellule:nth-child(n+46):nth-child(-n+54) {
-    border-bottom: 3px solid #000000;
-}
+.cellule.pre-rempli-box { background-color: #f1f1f1; }
 
-.cellule.pre-rempli-box {
-    background-color: #f1f1f1;
-}
-
+/* C'est la boîte du dessous qu'on colorie en rouge quand c'est faux */
 .cellule.invalide {
     background-color: #ffcdd2 !important;
     transition: background-color 0.3s;
 }
 
+/* --- LES NOTES --- */
 .notes {
     position: absolute;
     bottom: 2px;
@@ -193,8 +185,8 @@ button:hover {
     line-height: 10px;
     color: #666;
     text-align: center;
-    pointer-events: none;
-    z-index: 5;
+    pointer-events: none; /* Les clics traversent les notes pour aller à l'input */
+    z-index: 5; /* Niveau intermédiaire (entre le fond et l'input) */
     font-family: sans-serif;
     overflow: hidden;
 }
