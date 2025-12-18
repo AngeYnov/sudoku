@@ -183,7 +183,7 @@ function recupererGrille() {
     return tableauduJeu;
 }
 
-// --- 4. VERIFICATION DE FIN DE JEU ---
+// --- 4. VERIFICATION DE JEU ---
 
 // (Mêmes règles que "nouvelleGrille" mais pour valider la victoire)
 function placementValide(grille, row, col, num) {
